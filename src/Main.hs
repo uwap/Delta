@@ -6,6 +6,11 @@ import Entity
 main :: IO ()
 main = do
   (_progName, _args) <- getArgsAndInitialize
+  
+  initialWindowSize $= Size 640 480
+  initialWindowPosition $= Position 100 150
+  initialDisplayMode $= [DoubleBuffered, RGBMode]
+  
   _window <- createWindow "Hello World"
   displayCallback $= display
   mainLoop
@@ -15,4 +20,4 @@ display = do
   clear [ ColorBuffer ]
   renderPrimitive Quads $ do
     render $ Player 0 0 0.5 0.5
-  flush
+  swapBuffers

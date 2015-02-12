@@ -4,11 +4,13 @@ import Graphics.UI.GLUT
 
 class Entity a where
   render :: a -> IO ()
+  update :: a -> a
 
 data Player = Player { x :: GLfloat, y :: GLfloat, width :: GLfloat, height :: GLfloat }
 
 instance Entity Player where
   render (Player x y w h) = quad x y w h
+  update = id
 
 quad :: GLfloat -> GLfloat -> GLfloat -> GLfloat -> IO ()
 quad x y w h = do
