@@ -20,6 +20,6 @@ executable Delta
   -- other-modules:       
   -- other-extensions:    
   build-depends:       base >=4.7 && <4.8
-                     , GLUT > 2.5.1 && < 2.5.2
+                     , GLUT >= 2.5.1.0 && < 2.5.2.0
   hs-source-dirs:      src
   default-language:    Haskell2010
