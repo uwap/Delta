@@ -5,6 +5,7 @@ import Entity
 
 import Graphics.UI.GLUT
 import Data.IORef
+import Control.Monad.State
 
 data GameState = GameState {
                  world :: IORef World
@@ -42,10 +43,12 @@ display state = do
   loadIdentity
   clear [ ColorBuffer ]
   w <- readIORef (world state)
-  let new_world = updateAllEntities w
-  renderAllEntities w
-  world state $= new_world
+  result <- runStateT updateGame w
+  world state $= snd result
   swapBuffers
+
+updateGame :: Game ()
+updateGame = updateAllEntities >> renderAllEntities
 
 reshape :: ReshapeCallback
 reshape size = do

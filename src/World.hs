@@ -1,6 +1,9 @@
 module World where
 
 import Graphics.UI.GLUT (renderPrimitive, PrimitiveMode(Quads))
+import Control.Monad.State
+
+type Game a = StateT World IO a
 
 data Entity = Entity { update :: World -> Entity
                      , render :: IO ()
@@ -8,8 +11,13 @@ data Entity = Entity { update :: World -> Entity
 
 data World = World { entities :: [Entity] }
 
-updateAllEntities :: World -> World
-updateAllEntities w = World (map (flip update w) $ entities w)
+updateAllEntities :: Game ()
+updateAllEntities = do
+  w <- get
+  let entityList = map (flip update w) $ entities w
+  put $ World entityList
 
-renderAllEntities :: World -> IO ()
-renderAllEntities w = mapM_ (renderPrimitive Quads . render) $ entities w
+renderAllEntities :: Game ()
+renderAllEntities = do
+  w <- get
+  liftIO . mapM_ (renderPrimitive Quads . render) $ entities w
