@@ -6,7 +6,7 @@ import Graphics.UI.GLUT
 player :: GLfloat -> GLfloat -> GLfloat -> GLfloat -> Entity
 player x y w h = Entity (u x y w h) (r x y w h)
       where
-        u x = player (x + 1)
+        u x y w h _ = player (x + 1) y w h
         r = quad
 
 quad :: GLfloat -> GLfloat -> GLfloat -> GLfloat -> IO ()

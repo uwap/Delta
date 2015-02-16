@@ -43,14 +43,14 @@ display state = do
   clear [ ColorBuffer ]
   w <- readIORef (world state)
   let entityList = entities w
-  updatedEntities <- mapM renderEntity entityList
+  updatedEntities <- mapM (renderEntity w) entityList
   world state $= World updatedEntities
   swapBuffers
 
-renderEntity :: Entity -> IO Entity
-renderEntity e = do
+renderEntity :: World -> Entity -> IO Entity
+renderEntity w e = do
   renderPrimitive Quads $ render e
-  return $ update e
+  return $ update e w
 
 reshape :: ReshapeCallback
 reshape size = do
