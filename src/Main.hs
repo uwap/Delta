@@ -42,16 +42,11 @@ display state = do
   loadIdentity
   clear [ ColorBuffer ]
   w <- readIORef (world state)
-  let entityList = entities w
-  updatedEntities <- mapM (renderEntity w) entityList
-  world state $= World updatedEntities
+  let new_world = updateAllEntities w
+  renderAllEntities w
+  world state $= new_world
   swapBuffers
-
-renderEntity :: World -> Entity -> IO Entity
-renderEntity w e = do
-  renderPrimitive Quads $ render e
-  return $ update e w
-
+  
 reshape :: ReshapeCallback
 reshape size = do
   viewport $= (Position 0 0, size)
