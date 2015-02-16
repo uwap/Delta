@@ -3,19 +3,15 @@ module Entity where
 
 import Graphics.UI.GLUT
 
-class Entity a where
-  render :: a -> IO ()
-  update :: a -> a
+data Entity = Entity { update :: Entity
+                     , render :: IO ()
+                     }
 
--- Sadly we need to use this wrapper to be able to
--- create types like [EntityType]
-data EntityType = forall a. Entity a => EntityType a
-
-data Player = Player { x :: GLfloat, y :: GLfloat, width :: GLfloat, height :: GLfloat }
-
-instance Entity Player where
-  render (Player x y w h) = quad x y w h >> print x
-  update (Player x y w h) = Player (x + 1) y w h
+player :: GLfloat -> GLfloat -> GLfloat -> GLfloat -> Entity
+player x y w h = Entity (u x y w h) (r x y w h)
+      where
+        u x = player (x + 1)
+        r = quad
 
 quad :: GLfloat -> GLfloat -> GLfloat -> GLfloat -> IO ()
 quad x y w h = do

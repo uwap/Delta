@@ -5,7 +5,7 @@ import Entity
 import Data.IORef
 
 data GameState = GameState {
-                 entities :: IORef [EntityType]
+                 entities :: IORef [Entity]
                , timerMillis :: Timeout
                }
 
@@ -23,7 +23,7 @@ main = do
   initialDisplayMode $= [DoubleBuffered, RGBMode]
 
   state <- initializeGameState
-  entities state $= [EntityType $ Player 200 200 100 100]
+  entities state $= [player 200 200 100 100]
 
   _window <- createWindow "Hello World"
 
@@ -44,10 +44,10 @@ display state = do
   entities state $= updatedEntities
   swapBuffers
 
-renderEntity :: EntityType -> IO EntityType
-renderEntity (EntityType e) = do
+renderEntity :: Entity -> IO Entity
+renderEntity e = do
   renderPrimitive Quads $ render e
-  return . EntityType $ update e
+  return $ update e
 
 reshape :: ReshapeCallback
 reshape size = do
