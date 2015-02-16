@@ -2,15 +2,16 @@ module Entity where
 
 import World
 import Graphics.UI.GLUT -- (Size, Position, vertex, Vertex3, GLfloat)
+import Control.Monad.State (liftIO)
 
 player :: Position -> Size -> Entity
 player pos@(Position x y) size@(Size w h) = Entity (u x y size) (r pos size)
       where
-        u x y s _ = player (Position (x + 1) y) s
-        r = quad
+        u x y s = return $ player (Position (x + 1) y) s
+        r p s = quad p s
 
-quad :: Position -> Size -> IO ()
-quad (Position x y) (Size w h) = do
+quad :: Position -> Size -> Game ()
+quad (Position x y) (Size w h) = liftIO $ renderPrimitive Quads $ do
   vertex2i x y
   vertex2i x (y + h)
   vertex2i (x + w) (y + h)

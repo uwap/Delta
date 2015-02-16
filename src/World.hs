@@ -5,19 +5,18 @@ import Control.Monad.State
 
 type Game a = StateT World IO a
 
-data Entity = Entity { update :: World -> Entity
-                     , render :: IO ()
+data Entity = Entity { update :: Game Entity
+                     , render :: Game ()
                      }
 
 data World = World { entities :: [Entity] }
 
 updateAllEntities :: Game ()
 updateAllEntities = do
-  w <- get
-  let entityList = map (flip update w) $ entities w
+  entityList <- get >>= sequence . map update . entities
   put $ World entityList
 
 renderAllEntities :: Game ()
 renderAllEntities = do
-  w <- get
-  liftIO . mapM_ (renderPrimitive Quads . render) $ entities w
+    w <- get
+    mapM_ render $ entities w
