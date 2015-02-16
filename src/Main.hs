@@ -1,17 +1,19 @@
 module Main where
 
-import Graphics.UI.GLUT
+import World
 import Entity
+
+import Graphics.UI.GLUT
 import Data.IORef
 
 data GameState = GameState {
-                 entities :: IORef [Entity]
+                 world :: IORef World
                , timerMillis :: Timeout
                }
 
 initializeGameState :: IO GameState
 initializeGameState = do
-  entities <- newIORef []
+  entities <- newIORef $ World []
   return $ GameState entities 20
 
 main :: IO ()
@@ -23,7 +25,7 @@ main = do
   initialDisplayMode $= [DoubleBuffered, RGBMode]
 
   state <- initializeGameState
-  entities state $= [player 200 200 100 100]
+  world state $= World [player 200 200 100 100]
 
   _window <- createWindow "Hello World"
 
@@ -39,9 +41,10 @@ display :: GameState -> DisplayCallback
 display state = do
   loadIdentity
   clear [ ColorBuffer ]
-  entityList <- readIORef $ entities state
+  w <- readIORef (world state)
+  let entityList = entities w
   updatedEntities <- mapM renderEntity entityList
-  entities state $= updatedEntities
+  world state $= World updatedEntities
   swapBuffers
 
 renderEntity :: Entity -> IO Entity

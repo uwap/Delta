@@ -1,11 +1,7 @@
-{-# LANGUAGE ExistentialQuantification #-}
 module Entity where
 
+import World
 import Graphics.UI.GLUT
-
-data Entity = Entity { update :: Entity
-                     , render :: IO ()
-                     }
 
 player :: GLfloat -> GLfloat -> GLfloat -> GLfloat -> Entity
 player x y w h = Entity (u x y w h) (r x y w h)
