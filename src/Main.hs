@@ -25,7 +25,7 @@ main = do
   initialDisplayMode $= [DoubleBuffered, RGBMode]
 
   state <- initializeGameState
-  world state $= World [player 200 200 100 100]
+  world state $= World [player (Position 200 200) (Size 100 100)]
 
   _window <- createWindow "Hello World"
 
@@ -46,7 +46,7 @@ display state = do
   renderAllEntities w
   world state $= new_world
   swapBuffers
-  
+
 reshape :: ReshapeCallback
 reshape size = do
   viewport $= (Position 0 0, size)

@@ -1,6 +1,6 @@
 module World where
 
-import Graphics.UI.GLUT
+import Graphics.UI.GLUT (renderPrimitive, PrimitiveMode(Quads))
 
 data Entity = Entity { update :: World -> Entity
                      , render :: IO ()

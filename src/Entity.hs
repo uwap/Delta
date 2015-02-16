@@ -1,20 +1,23 @@
 module Entity where
 
 import World
-import Graphics.UI.GLUT
+import Graphics.UI.GLUT -- (Size, Position, vertex, Vertex3, GLfloat)
 
-player :: GLfloat -> GLfloat -> GLfloat -> GLfloat -> Entity
-player x y w h = Entity (u x y w h) (r x y w h)
+player :: Position -> Size -> Entity
+player pos@(Position x y) size@(Size w h) = Entity (u x y size) (r pos size)
       where
-        u x y w h _ = player (x + 1) y w h
+        u x y s _ = player (Position (x + 1) y) s
         r = quad
 
-quad :: GLfloat -> GLfloat -> GLfloat -> GLfloat -> IO ()
-quad x y w h = do
-  vertex3f x y 0
-  vertex3f x (y + h) 0
-  vertex3f (x + w) (y + h) 0
-  vertex3f (x + w) y 0
+quad :: Position -> Size -> IO ()
+quad (Position x y) (Size w h) = do
+  vertex2i x y
+  vertex2i x (y + h)
+  vertex2i (x + w) (y + h)
+  vertex2i (x + w) y
 
 vertex3f :: GLfloat -> GLfloat -> GLfloat -> IO ()
 vertex3f x y z = vertex $ Vertex3 x y z
+
+vertex2i :: GLint -> GLint -> IO ()
+vertex2i x y = vertex $ Vertex2 x y
