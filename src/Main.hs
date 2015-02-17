@@ -14,8 +14,8 @@ data GameState = GameState {
 
 initializeGameState :: IO GameState
 initializeGameState = do
-  entities <- newIORef $ World []
-  return $ GameState entities 20
+  w <- newIORef $ World [] []
+  return $ GameState w 20
 
 main :: IO ()
 main = do
@@ -26,7 +26,7 @@ main = do
   initialDisplayMode $= [DoubleBuffered, RGBMode]
 
   state <- initializeGameState
-  world state $= World [player (Position 200 200) (Size 100 100)]
+  world state $= World [player (Position 200 200) (Size 100 100)] []
 
   _window <- createWindow "Hello World"
 
@@ -48,7 +48,7 @@ display state = do
   swapBuffers
 
 updateGame :: Game ()
-updateGame = updateAllEntities >> renderAllEntities
+updateGame = updateAllEntities >> renderAllEntities >> clearKeyboardStates
 
 reshape :: ReshapeCallback
 reshape size = do
@@ -65,4 +65,6 @@ timer state = do
   addTimerCallback (timerMillis state) (timer state)
 
 keyboardMouseHandler :: GameState -> KeyboardMouseCallback
-keyboardMouseHandler state key keyState _ _ = return ()
+keyboardMouseHandler state key keyState _ _ = do
+  w <- readIORef $ world state
+  world state $= World (entities w) ((key, keyState) : keyChanges w)
