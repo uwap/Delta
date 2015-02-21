@@ -6,6 +6,7 @@ import Entity
 import Graphics.UI.GLUT
 import Data.IORef
 import Control.Monad.State
+import Linear.V2
 
 data GameState = GameState {
                  world :: IORef World
@@ -26,7 +27,7 @@ main = do
   initialDisplayMode $= [DoubleBuffered, RGBMode]
 
   state <- initializeGameState
-  world state $= World [player (Position 200 200) (Size 100 100)] []
+  world state $= World [player (V2 200 200) (V2 100 100)] []
 
   _window <- createWindow "Hello World"
 
